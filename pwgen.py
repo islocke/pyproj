@@ -10,4 +10,4 @@ def generate_password(length=12):
     return password
 
 # Example usage:
-print(generate_password(23))
+print(generate_password(33))
