@@ -2,8 +2,13 @@
 
 from argparse import ArgumentParser
 from pathlib import Path
+import sys
 
-from .compare import compare_files
+try:  # Allow running both as a module (-m src.main) and as a script (python src/main.py).
+    from .compare import compare_files
+except ImportError:  # Script execution without package context.
+    sys.path.append(str(Path(__file__).resolve().parent))
+    from compare import compare_files
 
 # Resolve project root relative to this file so defaults work regardless of CWD.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
