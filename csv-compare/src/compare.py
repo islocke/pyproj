@@ -63,6 +63,15 @@ def _write_cusip_file(path: Path, cusips: Iterable[str]) -> None:
             writer.writerow([cusip])
 
 
+def _write_result_file(path: Path, rows: Iterable[tuple[str, str]]) -> None:
+    """Write comparison results with difference column."""
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.writer(handle)
+        writer.writerow([COMPARISON_CONFIG["join_key"], "difference"])
+        for row in rows:
+            writer.writerow(row)
+
+
 def _compare_and_write(
     *,
     base_filename: str,
@@ -74,23 +83,28 @@ def _compare_and_write(
 ) -> None:
     """Compare two datasets on a column and write match/error CSVs."""
     all_keys = set(left_rows) | set(right_rows)
-    matches: List[str] = []
-    errors: List[str] = []
+    matches: List[tuple[str, str]] = []
+    errors: List[tuple[str, str]] = []
 
     for key in sorted(all_keys):
         left_val = _parse_decimal(left_rows.get(key), left_column)
         right_val = _parse_decimal(right_rows.get(key), right_column)
 
+        diff_str = ""
+        if left_val is not None and right_val is not None:
+            diff = left_val - right_val
+            diff_str = str(diff)
+
         if left_val is not None and right_val is not None and _values_match(left_val, right_val):
-            matches.append(key)
+            matches.append((key, diff_str))
         else:
-            errors.append(key)
+            errors.append((key, diff_str))
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     match_path = output_dir / f"{base_filename}_matches_{timestamp}.csv"
     error_path = output_dir / f"{base_filename}_errors_{timestamp}.csv"
-    _write_cusip_file(match_path, matches)
-    _write_cusip_file(error_path, errors)
+    _write_result_file(match_path, matches)
+    _write_result_file(error_path, errors)
 
     print(f"[{base_filename}] Wrote {len(matches)} matches to {match_path.name}")
     print(f"[{base_filename}] Wrote {len(errors)} errors to {error_path.name}")
@@ -116,7 +130,7 @@ def compare_files(data_dir: Path, output_dir: Path) -> None:
 
     # 1) Custody shares vs w360 shares
     _compare_and_write(
-        base_filename="assetdetaicustody_w360_cost_compare",
+        base_filename="assetdetaicustodyl_w360_cost_compare",
         left_rows=custody_rows,
         left_column="shares",
         right_rows=w360_rows,
