@@ -130,7 +130,7 @@ def compare_files(data_dir: Path, output_dir: Path) -> None:
 
     # 1) Custody shares vs w360 shares
     _compare_and_write(
-        base_filename="assetdetaicustodyl_w360_cost_compare",
+        base_filename="assetdetaicustody_w360_cost_compare",
         left_rows=custody_rows,
         left_column="shares",
         right_rows=w360_rows,
