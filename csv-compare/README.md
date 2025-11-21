@@ -12,9 +12,11 @@ Command-line utility to compare key fields across three CSV exports and report m
   1. Custody `shares` vs w360 `no of shares`
   2. Local `local cost` vs w360 `natve cost`
 - For each comparison, two outputs are written to `output/` with a timestamp suffix:
-  - `..._matches_YYYYMMDD_HHMMSS.csv`
-  - `..._errors_YYYYMMDD_HHMMSS.csv`
-  - Each file contains one `cusip` per row.
+  - `assetdetaicustodyl_w360_cost_compare_matches_YYYYMMDD_HHMMSS.csv`
+  - `assetdetaicustodyl_w360_cost_compare_errors_YYYYMMDD_HHMMSS.csv`
+  - `assetdetaillocal_w360_cost_compare_matches_YYYYMMDD_HHMMSS.csv`
+  - `assetdetaillocal_w360_cost_compare_errors_YYYYMMDD_HHMMSS.csv`
+  - Each output row contains `cusip` and `difference` (`left - right` value).
 
 ## Setup
 Requires Python 3.11+ (standard library only).
