@@ -5,19 +5,22 @@ from pathlib import Path
 
 from compare import compare_files
 
+# Resolve project root relative to this file so defaults work regardless of CWD.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
 
 def parse_args() -> tuple[Path, Path]:
     """Parse CLI arguments and return data/output directories."""
     parser = ArgumentParser(description="Compare CSV files and write results.")
     parser.add_argument(
         "--data-dir",
-        default=Path("data"),
+        default=PROJECT_ROOT / "data",
         type=Path,
         help="Directory containing input CSV files.",
     )
     parser.add_argument(
         "--output-dir",
-        default=Path("output"),
+        default=PROJECT_ROOT / "output",
         type=Path,
         help="Directory to write comparison results.",
     )
