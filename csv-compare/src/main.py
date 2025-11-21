@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 from pathlib import Path
 
-from compare import compare_files
+from .compare import compare_files
 
 # Resolve project root relative to this file so defaults work regardless of CWD.
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
